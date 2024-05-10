@@ -1,0 +1,449 @@
+<mvc:View controllerName="helpe.fastentryso.controller.Object_T" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form" xmlns:l="sap.ui.layout" xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:semantic="sap.f.semantic">
+    <semantic:SemanticPage id="page" showFooter="true" headerPinnable="false" toggleHeaderOnTitleClick="false" 
+        busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}" class="sapUiNoContentPadding">
+        <!-- <semantic:titleHeading><Title text="{textModel>/Text}"/></semantic:titleHeading> -->
+        
+        <semantic:titleHeading>
+            <HBox renderType="Bare" alignItems="Center">
+                <Avatar src="{textModel>/Icon}" displayShape="Square" class="sapUiTinyMarginEnd"/>
+                <VBox renderType="Bare">
+                    <Title text="{textModel>/Title}"/>
+                    <Label text="{textModel>/Text}" design="Bold"/>
+                </VBox>
+            </HBox>
+        </semantic:titleHeading>
+        
+        <semantic:content>
+            <VBox>
+                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" 
+                    labelSpanXL="4" labelSpanL="6" labelSpanM="12" labelSpanS="12" 
+                    adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" 
+                    columnsXL="3" columnsL="3" columnsM="1" singleContainerFullSize="false" class="customTitleNoHeight">
+                    <form:content>
+                        <core:Title/>
+                        <Label text="{i18n>ContractNumber}" required="true"/>
+                        <Input id="contractNumber" value="{SalesOrder>/SalesContract}" showSuggestion="true" 
+                            showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" 
+                            app:entitySet="ZSD_CDS_B_CONTRACT_VH" editable="{editableModel>/ContractNo}"
+                            valueState="{= !!${SalesOrder>/SalesContract} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/SalesContract} ? '' : ${i18n>fieldMandatory}}"/>
+                        
+                        <Label text="{i18n>ContractValidTill}"/>
+                        <!-- <Text text="{path: 'SalesOrder>/ContractValidityEndDate', type:'sap.ui.model.type.Date',formatOptions:{style : 'medium',source: { pattern: 'yyyy-MM-dd' }}}"/> -->
+                        <Text text="{SalesOrder>/ContractValidityEndDate}"/>
+                        <!-- <DatePicker dateValue="{SalesOrder>/ContractValidityEndDate}" editable="false"><layoutData><l:GridData span="XL2 L5 M4 S4"/></layoutData></DatePicker> -->
+                        
+                        <Label text="{i18n>CustomerCode}"/>
+                        <Text text="{SalesOrder>/kunnr}"/>
+                        
+                        <Label text="{i18n>CustomerName}"/>
+                        <Text text="{SalesOrder>/name1} {SalesOrder>/land1}"/>
+                        
+                        <Label text="{i18n>Shipto}" required="true"/>
+                        <Input id="inputShipTo" value="{SalesOrder>/ShipToParty}" type="Text" showValueHelp="true" 
+                            valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_ShipTo_VH" 
+                            app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" 
+                            app:descriptionKey="Name" editable="{editableModel>/ShipToKunnr}"
+                            valueState="{= !!${SalesOrder>/ShipToParty} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/ShipToParty} ? '' : ${i18n>fieldMandatory}}">
+                            <!-- <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData> -->
+                        </Input>
+                        
+                        <Label text="{i18n>ShiptoName}"/>
+                        <Text text="{SalesOrder>/ShipToPartyName} {SalesOrder>/ShipToPartyLand}"/>
+                        
+                        <!-- <Label text="{i18n>IntercompanyPartner}"/>
+                        <Input id="inputIntercompanyPartner" value="{SalesOrder>/IntercompanyPartner}" type="Text" 
+                            showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                            app:entitySet="ZSD_CDS_B_IntPartner_VH" app:filter1="Key|Text" app:column1="Key" 
+                            app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                            editable="{editableModel>/IntercompKunnr}">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input>
+
+                        <Label text="Intercompany Partner Name"/>
+                        <Text text="{SalesOrder>/IntercompanyPartnerName}"/> -->
+
+                        <Label text="{i18n>MRNNumber}"/>
+                        <Input value="{SalesOrder>/zzmrnssdn}" editable="{editableModel>/Zzmrnssdn}">
+                            <!-- <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData> -->
+                        </Input>
+                        
+                        <Label text="{i18n>CustomerRefNumber}"/>
+                        <Text text="{SalesOrder>/bstnk}"/>
+                        
+                        <core:Title/>
+                        <!-- <Input value="{SalesOrder>/bstnk}" type="Text">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input> -->
+
+                        <Label text="{i18n>DestinationID}" required="true"/>
+                        <Input id="inputDestinationID" value="{SalesOrder>/zzdestid}" type="Text" showValueHelp="true" 
+                            valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_TL_DEST" 
+                            app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                            editable="{= ${editableModel>/onlyDisplay}}"
+                            valueState="{= !!${SalesOrder>/zzdestid} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/zzdestid} ? '' : ${i18n>fieldMandatory}}">
+                            <!-- <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData> -->
+                        </Input>
+                        
+                        <Label text="{i18n>LoadingPoint}" required="true"/>
+                        <Input id="inputLoadingPoint" value="{SalesOrder>/vstel}" type="Text" showValueHelp="true" 
+                            valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_TL_DEST2" app:filter1="Key|Text" 
+                            app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" editable="{editableModel>/RefDoc}"
+                            valueState="{= !!${SalesOrder>/vstel} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/vstel} ? '' : ${i18n>fieldMandatory}}">
+                            <!-- <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData> -->
+                        </Input>
+                        
+                        <Label text="{i18n>SalesOrg}"/>
+                        <Text text="{SalesOrder>/vkorg} {SalesOrder>/VkorgDesc}"/>
+                        
+                        <Label text="{i18n>DistChannel}"/>
+                        <Text text="{SalesOrder>/vtweg} {SalesOrder>/VtwegDesc}"/>
+                        
+                        <Label text="{i18n>Division}"/>
+                        <Text text="{SalesOrder>/spart} {SalesOrder>/SpartDesc}"/>
+                        
+                        <Label text="{i18n>Plant}"/>
+                        <Text text="{SalesOrder>/werks} {SalesOrder>/WerksDesc}"/>
+                        
+                        <Label text="{i18n>SalesOrderType}"/>
+                        <Text text="{SalesOrder>/auart} {SalesOrder>/AuartDesc}"/>
+
+                        <!-- <Label text=""/>
+                        <Text/> -->
+                        
+                        <core:Title/>
+                        <Label text="{i18n>HandlingID}" required="true"/>
+                        <Input id="inputHandleCode" value="{SalesOrder>/zzhandid}" type="Text" showValueHelp="true" 
+                            valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_HANDID_VH" 
+                            app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" 
+                            app:descriptionKey="Name" editable="{editableModel>/Zzhandid}"
+                            valueState="{= !!${SalesOrder>/zzhandid} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/zzhandid} ? '' : ${i18n>fieldMandatory}}">
+                            <!-- <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData> -->
+                        </Input>
+                        
+                        <Label text="{i18n>HandlingIDDescr}"/>
+                        <Text text="{SalesOrder>/zzhandid_desc}"/>
+                        
+                        <Label text="{i18n>ShippingType}" required="true"/>
+                        <!-- ModeOfTransport -->
+                        <Input id="inputModeofTransport" value="{SalesOrder>/ShippingType}" type="Text" showValueHelp="true" 
+                            valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_ShippingType_VH" 
+                            app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" 
+                            app:descriptionKey="Name" editable="{editableModel>/ContractNo}"
+                            valueState="{= !!${SalesOrder>/ShippingType} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/ShippingType} ? '' : ${i18n>fieldMandatory}}">
+                            <!-- <layoutData><l:GridData span="XL2 L5 M4 S4"/></layoutData> -->
+                        </Input>
+                        
+                        <Label text="{i18n>ShippingTypeDescr}"/>
+                        <Text text="{SalesOrder>/ShippingTypeDesc}"/>
+
+                        <!-- <Label text="{i18n>CarrierCode}" required="true"/>
+                        <Input id="inputCarrierCode" value="{SalesOrder>/zzvendor}" type="Text" showValueHelp="true" 
+                            valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_CARRIER_VH" 
+                            app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" 
+                            app:descriptionKey="Name" editable="{editableModel>/onlyDisplay}">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input>
+                        
+                        <Label text="Carrier Name"/>
+                        <Text text="{SalesOrder>/zzvendorName} {SalesOrder>/zzvendorLand}"/> -->
+                        
+                        <Label text="{i18n>DeliveryDate}" required="true"/>
+                        <DatePicker dateValue="{SalesOrder>/vdatu}" editable="{editableModel>/onlyDisplay}"
+                            valueState="{= !!${SalesOrder>/vdatu} ? 'None': 'Error'}"
+                            valueStateText="{= !!${SalesOrder>/vdatu} ? '' : ${i18n>fieldMandatory}}">
+                            <!-- <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData> -->
+                        </DatePicker>
+
+                        <!-- <Label text="IMO ID"/>
+                            <Input value="{SalesOrder>/zzimo}" editable="{editableModel>/onlyDisplay}">
+                                <layoutData>
+                                    <l:GridData span="XL2 L5 M4 S4"/>
+                                </layoutData>
+                            </Input> -->
+
+                        <!-- <Label text="{i18n>DriverID}"/>
+                        <Input value="{SalesOrder>/zzdrivercode}">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input>
+                        
+                        <Label text="{i18n>DriverName}"/>
+                        <Input value="{SalesOrder>/zzdriverfname}">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input> -->
+                        
+                        <!-- <Label text="Vessel/Pipeline ID"/>
+                        <Input value="{SalesOrder>/zzvehicle}" editable="{editableModel>/onlyDisplay}">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input> -->
+                        
+                        <!-- <Label text="{i18n>TrailerID}"/>
+                        <Input value="{SalesOrder>/zztrailer}">
+                            <layoutData>
+                                <l:GridData span="XL2 L5 M4 S4"/>
+                            </layoutData>
+                        </Input> -->
+                        
+                        <!-- <Label text="Brand"/>
+                        <Select id="select" showSecondaryValues="true" items="{ path: 'oModelbrand>/items' }" 
+                            editable="{editableModel>/ContractNo}">
+                            <core:ListItem text="{oModelbrand>Brand}"/>
+                        /Select> -->
+                    </form:content>
+                </form:SimpleForm>
+
+                <ui:Table rows="{ path: 'SalesOrder>/to_OrdersChangeItems/results' }" 
+                    visibleRowCount="{SalesOrder>/to_OrdersChangeItems/results/length}" ariaLabelledBy="title" 
+                    selectionMode="None" enableColumnFreeze="true" class="sapUiTinyMargin" enableColumnReordering="true">
+                    <ui:extension>
+                        <OverflowToolbar style="Clear">
+                            <Title text="{i18n>Items} ({SalesOrder>/to_OrdersChangeItems/results/length})"/>
+                            <!-- <ToolbarSpacer/> -->
+                            <Button icon="sap-icon://add" text="{i18n>Add}" type="Accept" press=".onPressNewLine" 
+                                visible="{editableModel>/ContractNo}"/>
+                        </OverflowToolbar>
+                    </ui:extension>
+                    <ui:columns>
+
+                        <ui:Column hAlign="Begin" width="3.5rem" visible="{editableModel>/ContractNo}">
+                            <Label text=""/>
+                            <ui:template>
+                                <Button icon="sap-icon://decline" type="Reject" press=".onPressDeleteLine"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{textModel>/Item}"/>
+                            <ui:template>
+                                <!-- <Input id="inputContractItem" value="{SalesOrder>SalesOrderItem}" type="Text" 
+                                    showSuggestion="true" showValueHelp="true" valueHelpRequest="onValueHelpRequest" 
+                                    app:entitySet="ZSD_CDS_B_FAST_ENTRY_ITEMS" app:filter1="Key|Text" app:column1="Key" 
+                                    app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                                    editable="{editableModel>/ContractNo}">
+                                    <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData>
+                                </Input> -->
+                                <Text text="{SalesOrder>SalesOrderItem}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MaterialCode}" required="true"/>
+                            <ui:template>
+                                <!-- <Text text="{SalesOrder>matnr}" editable="{editableModel>/ContractNo}"/> -->
+                                <Input showSuggestion="true" value="{SalesOrder>matnr}" editable="{editableModel>/ContractNo}" showTableSuggestionValueHelp="false" 
+                                    suggestionRows="{S1>/results}" suggestionItemSelected="handleSuggestionContractItemSelect"
+                                    valueState="{= !!${SalesOrder>matnr} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>matnr} ? '' : ${i18n>fieldMandatory}}">
+                                    <suggestionColumns>
+                                        <Column popinDisplay="Inline" demandPopin="true">
+                                            <Label text="{i18n>Material}"/>
+                                        </Column>
+                                        <Column popinDisplay="Inline" demandPopin="true" minScreenWidth="Tablet">
+                                            <Label text="{i18n>Item}"/>
+                                        </Column>
+                                        <Column hAlign="End" popinDisplay="Inline" minScreenWidth="Tablet">
+                                            <Label text="{i18n>TargetQty}"/>
+                                        </Column>
+                                        <Column hAlign="End" popinDisplay="Inline" minScreenWidth="Tablet">
+                                            <Label text="{i18n>ContractOrderQty}"/>
+                                        </Column>
+                                        <Column hAlign="End" popinDisplay="Inline" minScreenWidth="Tablet">
+                                            <Label text="{i18n>OpenContractQty}"/>
+                                        </Column>
+                                    </suggestionColumns>
+                                    <suggestionRows>
+                                        <ColumnListItem>
+                                            <Label text="{S1>matnr}"/>
+                                            <Label text="{S1>SalesContractItem}"/>
+                                            <Text text="{path: 'S1>TargetQuantity', type: 'sap.ui.model.type.Float'}"/>
+                                            <Text text="{path: 'S1>ContractOrderQuantity', type: 'sap.ui.model.type.Float'}"/>
+                                            <Text text="{path: 'S1>OpenContractQuantity', type: 'sap.ui.model.type.Float'}"/>
+                                        </ColumnListItem>
+                                    </suggestionRows>
+                                </Input>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End">
+                            <Label text="{i18n>MaterialQuantity}" required="true"/>
+                            <ui:template>
+                                <Input value="{path: 'SalesOrder>TargetQuantity', type: 'sap.ui.model.type.Float'}" 
+                                    editable="{editableModel>/onlyDisplay}"
+                                    valueState="{= !!${SalesOrder>TargetQuantity} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>TargetQuantity} ? '' : ${i18n>fieldMandatory}}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>UnitofMeasure}"/>
+                            <ui:template>
+                                <!-- <Input value="{SalesOrder>TargetQuantityUnit}" editable="{editableModel>/ContractNo}"/> -->
+                                <Text text="{SalesOrder>ContractTargetQuantityUnit}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>HandlingType}" required="true"/>
+                            <ui:template>
+                                <Input id="handlingtype" value="{SalesOrder>oihantyp}" showSuggestion="true" 
+                                    showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" 
+                                    app:entitySet="ZSD_CDS_B_HANDLINGTYPE_VH" editable="{editableModel>/ContractNo}"
+                                    valueState="{= !!${SalesOrder>oihantyp} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>oihantyp} ? '' : ${i18n>fieldMandatory}}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>LicenseID}"/>
+                            <ui:template>
+                                <Input id="licenseId" value="{SalesOrder>oih_licin}" showSuggestion="true" 
+                                showClearIcon="true" liveChange="onClearButtonPress"
+                                    showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" 
+                                    app:entitySet="ZSD_CDS_B_LICENSE_VH" editable="{editableModel>/onlyDisplay}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- + evkontos 8.4.2024 -->
+                        <ui:Column width="7rem">
+                            <Label text="{i18n>Brand}"/>
+                            <ui:template>
+                                <Select id="select" selectedKey="{SalesOrder>zzitbrand}" width="auto" 
+                                    items="{path: 'oModelbrand>/items'}" editable="{editableModel>/ContractNo}">
+                                    <core:ListItem key="{oModelbrand>Brand}" text="{oModelbrand>Description}"/>
+                                </Select>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MOT}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_mot}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MOTDescr}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_motDesc}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- <ui:Column width="11rem">
+                            <Label text="{i18n>Incoterm}" required="true"/>
+                            <ui:template>
+                                <Input id="inputIncoterm" value="{SalesOrder>inco1}" type="Text" showValueHelp="true" 
+                                    valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                                    app:entitySet="C_MM_IncotermValueHelp" app:filter1="Key|Text" 
+                                    app:column1="Key" app:column2="Name" app:key="Key" 
+                                    app:value="Key" app:descriptionKey="Name" editable="{editableModel>/onlyDisplay}">
+                                    <layoutData>
+                                        <l:GridData span="XL2 L5 M4 S4"/>
+                                    </layoutData>
+                                </Input>
+                            </ui:template>
+                        </ui:Column> -->
+
+                        <ui:Column width="11rem" hAlign="End">
+                            <Label text="{i18n>ContractItemQty}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>ContractOrderQuantity', type: 'sap.ui.model.type.Float'}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End">
+                            <Label text="{i18n>ConsumedQty}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>ContractTargetQuantity', type: 'sap.ui.model.type.Float'}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End">
+                            <Label text="{i18n>OpenQty}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>OpenContractQuantity', type: 'sap.ui.model.type.Float'}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>UnitofMeasure}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>ContractTargetQuantityUnit}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- <ui:Column hAlign="End" width="4rem" visible="{editableModel>/ContractNo}">
+                            <Label text=""/>
+                            <ui:template>
+                                <Button icon="sap-icon://decline" type="Reject" press=".onPressDeleteLine"/>
+                            </ui:template>
+                        </ui:Column> -->
+                    </ui:columns>
+                </ui:Table>
+            </VBox>
+        </semantic:content>
+
+        <semantic:footerCustomActions>
+            <Button text="{i18n>Save}" icon="sap-icon://save" press="onPressSave" visible="{editableModel>/onlyDisplay}"/>
+            <Button text="{i18n>Cancel}" icon="sap-icon://nav-back" press="onPressCancel"/>
+            <Button id="messagePopoverBtn" visible="false" icon="sap-icon://information" text="{i18n>Information}" 
+                press=".handleMessagePopoverPress" ariaHasPopup="Dialog"/>
+        </semantic:footerCustomActions>
+    </semantic:SemanticPage>
+</mvc:View>

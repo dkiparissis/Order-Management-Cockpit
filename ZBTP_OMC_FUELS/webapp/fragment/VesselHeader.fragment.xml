@@ -1,0 +1,259 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+    <form:SimpleForm editable="true" layout="ResponsiveGridLayout" 
+        labelSpanXL="4" labelSpanL="6" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" 
+        emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" 
+        columnsXL="3" columnsL="3" columnsM="1" singleContainerFullSize="false" class="customTitleNoHeight">
+        <form:content>
+            <!-- <core:Title text="{textModel>/Text}"/> -->
+            <core:Title/>
+
+            <Label text="{i18n>ContractNumber}" required="true" visible="{contractModel>/hasContract}"/>
+            <Input id="contractNumber" value="{SalesOrder>/SalesContract}" showSuggestion="true" 
+                showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" 
+                app:entitySet="ZSD_CDS_B_CONTRACT_VH" editable="{editableModel>/ContractNo}"
+                valueState="{= !!${SalesOrder>/SalesContract} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/SalesContract} ? '' : ${i18n>fieldMandatory}}"
+                visible="{contractModel>/hasContract}"/>
+
+            <Label text="{i18n>ContractValidTill}" visible="{contractModel>/hasContract}"/>
+            <!-- <Text text="{path: 'SalesOrder>/ContractValidityEndDate', 
+                type:'sap.ui.model.type.Date',formatOptions:{style : 'medium',source: { pattern: 'yyyy-MM-dd' }}}"/> -->
+            <Text text="{SalesOrder>/ContractValidityEndDate}" visible="{contractModel>/hasContract}"/>
+            <!-- <DatePicker dateValue="{SalesOrder>/ContractValidityEndDate}" editable="false">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </DatePicker> -->
+
+            <Label text="{i18n>CustomerCode}" visible="{contractModel>/hasContract}"/>
+            <Text text="{SalesOrder>/kunnr}" visible="{contractModel>/hasContract}"/>
+
+            <Label text="{i18n>CustomerCode}" required="true" visible="{= !${contractModel>/hasContract}}"/>
+            <Input value="{SalesOrder>/kunnr}" showSuggestion="true" visible="{= !${contractModel>/hasContract}}"
+                showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" 
+                app:entitySet="ZSD_CDS_B_CustomerSalesArea" valueState="{= !!${SalesOrder>/kunnr} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/kunnr} ? '' : ${i18n>fieldMandatory}}"
+                editable="{= ${editableModel>/ShipToKunnr} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}"/>
+
+            <Label text="{i18n>CustomerName}"/>
+            <Text text="{SalesOrder>/name1} {SalesOrder>/land1}"/>
+
+            <Label text="{i18n>Shipto}" required="true"/>
+            <Input id="inputShipTo" value="{SalesOrder>/ShipToParty}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_ShipTo_VH" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/ShipToKunnr} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}"
+                valueState="{= !!${SalesOrder>/ShipToParty} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/ShipToParty} ? '' : ${i18n>fieldMandatory}}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="{i18n>ShiptoName}"/>
+            <Text text="{SalesOrder>/ShipToPartyName} {SalesOrder>/ShipToPartyLand}"/>
+
+            <Label text="{i18n>Billto}"/>
+            <Input value="{SalesOrder>/BillToParty}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_BILLTO_VH" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/onlyDisplay} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}">
+            </Input>
+
+            <Label text="{i18n>BilltoName}"/>
+            <Text text="{SalesOrder>/BillToPartyName} {SalesOrder>/BillToPartyLand}"/>
+
+            <Label text="{i18n>IntercompanyPartner}"/>
+            <Input id="inputIntercompanyPartner" value="{SalesOrder>/IntercompanyPartner}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_IntPartner_VH" app:filter1="Key|Text" app:column1="Key"
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/IntercompKunnr} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="Intercompany Partner Name"/>
+            <Text text="{SalesOrder>/IntercompanyPartnerName}"/>
+
+            <Label text="MRN Number"/>
+            <Input value="{SalesOrder>/zzmrnssdn}"
+                editable="{= ${editableModel>/Zzmrnssdn} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <core:Title/>
+
+            <Label text="{i18n>CustomerRefNumber}" visible="{contractModel>/hasContract}"/>
+            <Text text="{SalesOrder>/bstnk}" visible="{contractModel>/hasContract}"/>
+            <!-- <Input value="{SalesOrder>/bstnk}" type="Text">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </Input> -->
+
+            <Label text="{i18n>CustomerRefNumber}" visible="{= !${contractModel>/hasContract}}"/>
+            <Input value="{SalesOrder>/bstnk}" type="Text" visible="{= !${contractModel>/hasContract}}"/>
+
+            <Label text="{i18n>DestinationID}" required="true"/>
+            <Input id="inputDestinationID" value="{SalesOrder>/zzdestid}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_TL_DEST" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/onlyDisplay}}"
+                valueState="{= !!${SalesOrder>/zzdestid} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzdestid} ? '' : ${i18n>fieldMandatory}}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="{i18n>LoadingPoint}" required="true"/>
+            <Input id="inputLoadingPoint" value="{SalesOrder>/vstel}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_TL_DEST2" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/RefDoc} &amp;&amp; (!!${SalesOrder>/zzdestid} || ${contractModel>/hasContract})}"
+                valueState="{= !!${SalesOrder>/vstel} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/vstel} ? '' : ${i18n>fieldMandatory}}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="{i18n>SalesOrg}"/>
+            <Text text="{SalesOrder>/vkorg} {SalesOrder>/VkorgDesc}"/>
+
+            <Label text="{i18n>DistChannel}"/>
+            <Text text="{SalesOrder>/vtweg} {SalesOrder>/VtwegDesc}"/>
+
+            <Label text="{i18n>Division}"/>
+            <Text text="{SalesOrder>/spart} {SalesOrder>/SpartDesc}"/>
+
+            <Label text="{i18n>Plant}"/>
+            <Text text="{SalesOrder>/werks} {SalesOrder>/WerksDesc}"/>
+
+            <Label text="{i18n>SalesOrderType}"/>
+            <Text text="{SalesOrder>/auart} {SalesOrder>/AuartDesc}"/>
+
+            <Label text="{i18n>HandlingID}" required="true"/>
+            <Input id="inputHandleCode" value="{SalesOrder>/zzhandid}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_HANDID_VH" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/Zzhandid} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}"
+                valueState="{= !!${SalesOrder>/zzhandid} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzhandid} ? '' : ${i18n>fieldMandatory}}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="{i18n>HandlingIDDescr}"/>
+            <Text text="{SalesOrder>/zzhandid_desc}"/>
+
+            <!-- <Label text=""/>
+            <Text/> -->
+
+            <core:Title/>
+
+            <Label text="{i18n>ShippingType}" required="true"/>
+            <!-- ModeOfTransport -->
+            <Input id="inputModeofTransport" value="{SalesOrder>/ShippingType}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="ZSD_CDS_B_ShippingType_VH" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/ContractNo} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}"
+                valueState="{= !!${SalesOrder>/ShippingType} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/ShippingType} ? '' : ${i18n>fieldMandatory}}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="{i18n>ShippingTypeDescr}"/>
+            <Text text="{SalesOrder>/ShippingTypeDesc}"/>
+
+            <Label text="{i18n>CarrierCode}"/>
+            <Input id="inputCarrierCode" value="{SalesOrder>/zzvendor}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true"
+                showClearIcon="true" liveChange="onClearButtonPress" 
+                app:entitySet="ZSD_CDS_B_CARRIER_VH" app:filter1="Key|Text" app:column1="Key" 
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/onlyDisplay} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </Input>
+
+            <Label text="{i18n>CarrierName}"/>
+            <Text text="{SalesOrder>/zzvendorName} {SalesOrder>/zzvendorLand}"/>
+
+            <Label text="{i18n>DeliveryDate}" required="true"/>
+            <DatePicker dateValue="{SalesOrder>/vdatu}"
+                editable="{= ${editableModel>/onlyDisplay} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}"
+                valueState="{= !!${SalesOrder>/vdatu} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/vdatu} ? '' : ${i18n>fieldMandatory}}">
+                <!-- <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData> -->
+            </DatePicker>
+
+            <Label text="{i18n>IMOID}"/>
+            <!-- <Input value="{SalesOrder>/zzimo}" editable="{editableModel>/onlyDisplay}">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </Input> -->
+            <Text text="{SalesOrder>/zzimo}"/>
+
+            <!-- <Label text="{i18n>DriverID}"/>
+            <Input value="{SalesOrder>/zzdrivercode}">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </Input>
+
+            <Label text="{i18n>DriverName}"/>
+            <Input value="{SalesOrder>/zzdriverfname}">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </Input> -->
+
+            <Label text="{i18n>VesselPipelineID}"/>
+            <!-- <Input value="{SalesOrder>/zzvehicle}" editable="{editableModel>/onlyDisplay}">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </Input> -->
+            <Input value="{SalesOrder>/zzvehicle}" type="Text" 
+                showValueHelp="true" valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                app:entitySet="VesselVHSet" app:filter1="Key|Text" app:column1="Key"
+                app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                editable="{= ${editableModel>/onlyDisplay} &amp;&amp; (!!${SalesOrder>/vstel} || ${contractModel>/hasContract})}"/>
+
+            <!-- <Label text="{i18n>TrailerID}"/>
+            <Input value="{SalesOrder>/zztrailer}">
+                <layoutData>
+                    <l:GridData span="XL2 L5 M4 S4"/>
+                </layoutData>
+            </Input> -->
+
+            <!-- evkontos 8.4.2024: Moved to Line items
+            <Label text="Brand"/>
+            <Select id="select" showSecondaryValues="true" items="{ path: 'oModelbrand>/items' }" 
+                editable="{editableModel>/ContractNo}">
+                <core:ListItem text="{oModelbrand>Brand}"/>
+            </Select> -->
+        </form:content>
+    </form:SimpleForm>
+
+</core:FragmentDefinition>

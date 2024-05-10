@@ -1,0 +1,171 @@
+<mvc:View controllerName="helpe.fastentrysol.controller.Object" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+    xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns:semantic="sap.f.semantic"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+    <semantic:SemanticPage id="page" showFooter="true" headerPinnable="false" toggleHeaderOnTitleClick="false" 
+        busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}" class="sapUiNoContentPadding">
+        <semantic:titleHeading>
+            <HBox renderType="Bare" alignItems="Center">
+                <Avatar src="{textModel>/Icon}" displayShape="Square" class="sapUiTinyMarginEnd"/>
+                <VBox renderType="Bare">
+                    <Title text="{textModel>/Title}"/>
+                    <Label text="{textModel>/Text}" design="Bold"/>
+                </VBox>
+            </HBox>
+        </semantic:titleHeading>
+        <semantic:content>
+            <VBox>
+                <core:Fragment fragmentName="helpe.fastentrysol.fragment.TruckHeader" type="XML"/>
+                <ui:Table id="soItemTable" rows="{path: 'SalesOrder>/to_OrdersChangeItems/results', sorter: {path: 'SalesOrderItem'}}" 
+                    visibleRowCount="{SalesOrder>/to_OrdersChangeItems/results/length}" ariaLabelledBy="title" selectionMode="None" 
+                    enableColumnFreeze="true" class="sapUiTinyMargin" enableColumnReordering="true">
+                    <ui:extension>
+                        <OverflowToolbar style="Clear">
+                            <Title text="Items ({SalesOrder>/to_OrdersChangeItems/results/length})"/>
+                            <Button id="QPbutton" press=".onPressQP" class="sapUiTinyMarginEnd" text="Quantity Proposal"
+                                        visible="{editableModel>/QPbutton}" enabled="false" tooltip="Quantity Proposal"/>
+                            <Button id="undoQPbutton" press=".onPressUndoQP" class="sapUiTinyMarginEnd" text="Undo Quantity Proposal"
+                                        visible="false" enabled="true" tooltip="Quantity Proposal"/>            
+                            <ToolbarSpacer/>
+                        </OverflowToolbar>
+                    </ui:extension>
+                    <ui:columns>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>SOI}"/>
+                            <ui:template>
+                                <HBox renderType="Bare" alignItems="Center">
+                                    <Button icon="sap-icon://delete" type="Reject" press=".onPressDeleteLine" class="sapUiTinyMarginEnd" 
+                                        visible="{= !${SalesOrder>TargetQuantity} &amp;&amp; ${SalesOrder>indicator} !== 'D'}" tooltip="Delete item"/>
+                                    <!-- visible="{= !${SalesOrder>TargetQuantity} &amp;&amp; ${SalesOrder>indicator} !== 'D'}" -->
+                                    <core:Icon src="sap-icon://sys-cancel-2" color="Negative" tooltip="Item will be deleted" 
+                                        visible="{= ${SalesOrder>indicator} === 'D'}" class="sapUiTinyMarginEnd"/>
+                                    <Text text="{= !!${SalesOrder>SalesOrderItem} ? ${SalesOrder>SalesOrderItem} : ${SalesOrder>SalesContractItem}}"/>
+                                </HBox>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MaterialCode}" required="true"/>
+                            <ui:template>
+                                <Input value="{SalesOrder>matnr}" showSuggestion="true" showValueHelp="true" valueHelpOnly="true" 
+                                    valueHelpRequest=".onValueHelpRequest" app:entitySet="I_SalesDocumentItemBasic" 
+                                    valueState="{= !!${SalesOrder>matnr} ? 'None': 'Error'}" 
+                                    valueStateText="{= !!${SalesOrder>matnr} ? '' : ${i18n>fieldMandatory}}" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"/>
+                            </ui:template>
+                        </ui:Column>                        <!-- tooltip="Converted Qty: {SalesOrder>TargetQuantityConv}" -->
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MaterialQuantity}" required="true"/>
+                            <ui:template>
+                                <Input value="{path: 'SalesOrder>TargetQuantity', type: 'sap.ui.model.type.Float'}" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}" 
+                                    tooltip="({SalesOrder>zzvehicle} / {SalesOrder>zztrailer})" change="onMaterialQtyUoMChange" 
+                                    valueState="{parts:['SalesOrder>TargetQuantity',
+                                        'SalesOrder>TargetQuantityUnit',
+                                        'SalesOrder>TargetQuantityConv',
+                                        'SalesOrder>zzcompcap',
+                                        'SalesOrder>zzcompcapuom'], formatter: '.formatter.materialQtyStateFormatter'}" 
+                                    valueStateText="{parts:['SalesOrder>TargetQuantity',
+                                        'SalesOrder>TargetQuantityUnit',
+                                        'SalesOrder>TargetQuantityConv',
+                                        'SalesOrder>zzcompcap',
+                                        'SalesOrder>zzcompcapuom'], formatter: '.formatter.materialQtyStateTextFormatter'}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>OrderUoM}" required="true"/>
+                            <ui:template>
+                            <Text text="{SalesOrder>TargetQuantityUnit}"/>
+                                <!-- <Select items="{uomData>/}" selectedKey="{SalesOrder>TargetQuantityUnit}" forceSelection="false" 
+                                    valueState="{= !!${SalesOrder>TargetQuantityUnit} ? 'None': 'Error'}" 
+                                    change="onMaterialQtyUoMChange" width="100%" 
+                                    valueStateText="{= !!${SalesOrder>TargetQuantityUnit} ? '' : ${i18n>fieldMandatory}}"
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}">
+                                    <core:ListItem key="{uomData>uom}" text="{uomData>Descr}"/>
+                                </Select> -->
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>ConvertedQty}"/>
+                            <ui:template>
+                                <ObjectNumber number="{path: 'SalesOrder>TargetQuantityConv', type: 'sap.ui.model.type.Float'}" 
+                                    unit="{SalesOrder>zzcompcapuom}" visible="{= !!${SalesOrder>TargetQuantityConv}}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>CmpNo}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>zzcomp}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>CmpC}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>zzcompcap', type: 'sap.ui.model.type.Float'}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>CompUoM}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>zzcompcapuom}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>HType}" required="true"/>
+                            <ui:template>
+                                <Input id="handlingtype" value="{SalesOrder>oihantyp}" showSuggestion="true" showValueHelp="true" 
+                                    valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" app:entitySet="ZSD_CDS_B_HANDLINGTYPE_VH" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}" 
+                                    valueState="{= !!${SalesOrder>oihantyp} ? 'None': 'Error'}" 
+                                    valueStateText="{= !!${SalesOrder>oihantyp} ? '' : ${i18n>fieldMandatory}}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>LID}"/>
+                            <ui:template>
+                                <Input id="licenseId" value="{SalesOrder>oih_licin}" type="Text" showValueHelp="true" 
+                                    valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="ZSD_CDS_B_LICENSE_VH" 
+                                    showClearIcon="true" liveChange="onClearButtonPress"
+                                    app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MOT}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_mot}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MOTD}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_motDesc}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>Incoterm}" required="true"/>
+                            <ui:template>
+                                <Input id="inputIncoterm" value="{SalesOrder>inco1}" type="Text" showValueHelp="true" 
+                                valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" app:entitySet="C_MM_IncotermValueHelp" 
+                                app:filter1="Key|Text" app:column1="Key" app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name"
+                                editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}" 
+                                valueState="{= !!${SalesOrder>inco1} ? 'None': 'Error'}" 
+                                valueStateText="{= !!${SalesOrder>inco1} ? '' : ${i18n>fieldMandatory}}"/>
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem" visible="{editableModel>/ContractNo}">
+                            <Label text=""/>
+                            <ui:template>
+                                <Button icon="sap-icon://decline" type="Reject" press=".onPressDeleteLine"/>
+                            </ui:template>
+                        </ui:Column>
+                    </ui:columns>
+                </ui:Table>
+            </VBox>
+        </semantic:content>
+        <semantic:footerCustomActions>
+            <Button text="Save" press="onPressSave" visible="{editableModel>/onlyDisplay}"/>
+            <Button text="Cancel" press="onPressCancel"/>
+            <Button id="messagePopoverBtn" visible="false" icon="sap-icon://information" type="Neutral" text="Information" 
+                press=".handleMessagePopoverPress" ariaHasPopup="Dialog"/>
+        </semantic:footerCustomActions>
+    </semantic:SemanticPage>
+</mvc:View>

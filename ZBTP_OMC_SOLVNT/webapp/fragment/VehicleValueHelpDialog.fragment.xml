@@ -1,0 +1,23 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog initialFocus="SearchField" search=".onVehicleSearch"
+        confirm=".onVehicleConfirm" cancel=".onVehicleCancel"
+        items="{path: 'vehicleData>/', parameters: {operationMode: 'Client'}}">
+        <CustomListItem>
+			<HBox renderType="Bare" justifyContent="SpaceBetween" alignItems="Stretch" class="sapUiTinyMargin">
+				<VBox renderType="Bare" justifyContent="SpaceBetween">
+					<ObjectIdentifier title="{vehicleData>Vehicleno}"/>
+					<Label text="{vehicleData>Vehicletype}"/>
+				</VBox>
+				<VBox renderType="Bare" alignItems="End">
+					<ObjectStatus title="{i18n>Locked}" class="sapUiTinyMarginBottom"
+						text="{= ${vehicleData>Islocked} ? ${i18n>Yes} : ${i18n>No}}"
+						state="{= ${vehicleData>Islocked} ? 'Error' : 'Success'}"/>
+					<ObjectStatus title="{i18n>NoOfCompartments}" state="Information"
+						text="{vehicleData>toVehicleVHCopartment/results/length}"/>
+					<ObjectStatus title="{i18n>TotalCompCapacity}" 
+						text="{path: 'vehicleData>toVehicleVHCopartment/results', formatter: '.formatter.getTotalCompartmentCapacity'}"/>
+				</VBox>
+			</HBox>
+        </CustomListItem>
+    </SelectDialog>
+</core:FragmentDefinition>

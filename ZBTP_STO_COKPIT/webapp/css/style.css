@@ -1,0 +1,14 @@
+:root {
+    --custom-logo: url('https://www.helleniqenergy.gr/themes/custom/helpe_theme/images/HELLENiQ_Logo_Standard.svg');   /* default for non-dark english themes */
+}
+
+.customBackground > div {
+    background-size: auto 2.5rem !important;
+    background-repeat: no-repeat !important;
+    background-position: 100% !important;
+    background-image: var(--custom-logo) !important;
+}
+
+.customTitleNoHeight h5 {
+    height: 0 !important;
+}

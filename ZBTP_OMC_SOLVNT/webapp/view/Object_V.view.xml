@@ -1,0 +1,250 @@
+<mvc:View
+    controllerName="helpe.fastentrysol.controller.Object_V"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:ui="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:semantic="sap.f.semantic"
+>
+    <semantic:SemanticPage
+        id="page"
+        showFooter="true"
+        headerPinnable="false"
+        toggleHeaderOnTitleClick="false"
+        busy="{objectView>/busy}"
+        busyIndicatorDelay="{objectView>/delay}"
+        class="sapUiNoContentPadding"
+    >
+        <semantic:titleHeading>
+            <HBox
+                renderType="Bare"
+                alignItems="Center"
+            >
+                <Avatar
+                    src="{textModel>/Icon}"
+                    displayShape="Square"
+                    class="sapUiTinyMarginEnd"
+                />
+                <VBox renderType="Bare">
+                    <Title text="{textModel>/Title}" />
+                    <Label
+                        text="{textModel>/Text}"
+                        design="Bold"
+                    />
+                </VBox>
+            </HBox>
+        </semantic:titleHeading>
+
+        <semantic:content>
+            <VBox>
+                <core:Fragment
+                    fragmentName="helpe.fastentrysol.fragment.VesselHeader"
+                    type="XML"
+                />
+
+                <ui:Table
+                    rows="{ path: 'SalesOrder>/to_OrdersChangeItems/results' }"
+                    visibleRowCount="{SalesOrder>/to_OrdersChangeItems/results/length}"
+                    ariaLabelledBy="title"
+                    selectionMode="None"
+                    enableColumnFreeze="true"
+                    class="sapUiTinyMargin"
+                    enableColumnReordering="true"
+                >
+                    <ui:extension>
+                        <OverflowToolbar style="Clear">
+                            <Title
+                                text="Items ({SalesOrder>/to_OrdersChangeItems/results/length})"
+                            />
+
+                            <ToolbarSpacer />
+                        </OverflowToolbar>
+                    </ui:extension>
+                    <ui:columns>
+                        <ui:Column width="11rem">
+                            <Label text="Sales Order Item" />
+                            <ui:template>
+                                <Text text="{SalesOrder>SalesOrderItem}">
+                                    <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4" />
+                                    </layoutData>
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label
+                                text="{i18n>MaterialCode}"
+                                required="true"
+                            />
+                            <ui:template>
+                                <Text text="{SalesOrder>matnr}" />
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label
+                                text="{i18n>MaterialQuantity}"
+                                required="true"
+                            />
+                            <ui:template>
+                                <Input
+                                    value="{path: 'SalesOrder>TargetQuantity', type: 'sap.ui.model.type.Float'}"
+                                    editable="{editableModel>/onlyDisplay}"
+                                    valueState="{= !!${SalesOrder>TargetQuantity} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>TargetQuantity} ? '' : ${i18n>fieldMandatory}}"
+                                />
+                            </ui:template>
+                        </ui:Column>
+                        <ui:Column width="11rem">
+                            <Label
+                                text="Unit Of Measure"
+                                required="true"
+                            />
+                            <ui:template>
+                                <Select
+                                    items="{path: 'uomData>/'}"
+                                    width="100%"
+                                    selectedKey="{SalesOrder>TargetQuantityUnit}"
+                                    forceSelection="false"
+                                    valueState="{= !!${SalesOrder>TargetQuantityUnit} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>TargetQuantityUnit} ? '' : ${i18n>fieldMandatory}}"
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"
+                                >
+                                    <core:ListItem
+                                        key="{uomData>uom}"
+                                        text="{uomData>Descr}"
+                                    />
+                                </Select>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label
+                                text="Handling Type"
+                                required="true"
+                            />
+                            <ui:template>
+                                <Input
+                                    id="handlingtype"
+                                    value="{SalesOrder>oihantyp}"
+                                    showSuggestion="true"
+                                    showValueHelp="true"
+                                    valueHelpOnly="true"
+                                    valueHelpRequest=".onValueHelpRequest"
+                                    app:entitySet="ZSD_CDS_B_HANDLINGTYPE_VH"
+                                    editable="{editableModel>/onlyDisplay}"
+                                    valueState="{= !!${SalesOrder>oihantyp} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>oihantyp} ? '' : ${i18n>fieldMandatory}}"
+                                />
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="License ID" />
+                            <ui:template>
+                                <Input
+                                    id="licenseId"
+                                    value="{SalesOrder>oih_licin}"
+                                    type="Text"
+                                    showValueHelp="true"
+                                    showSuggestion="true"
+                                    valueHelpRequest="onValueHelpRequest"
+                                    valueHelpOnly="true"
+                                    showClearIcon="true" liveChange="onClearButtonPress"
+                                    editable="{editableModel>/onlyDisplay}"
+                                    app:entitySet="ZSD_CDS_B_LICENSE_VH"
+                                    app:filter1="Key|Text"
+                                    app:column1="Key"
+                                    app:column2="Name"
+                                    app:key="Key"
+                                    app:value="Key"
+                                    app:descriptionKey="Name"
+                                />
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="MOT" />
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_mot}" />
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="MOT Description" />
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_motDesc}" />
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label
+                                text="{i18n>Incoterm}"
+                                required="true"
+                            />
+                            <ui:template>
+                                <Input
+                                    id="inputIncoterm"
+                                    value="{SalesOrder>inco1}"
+                                    type="Text"
+                                    showValueHelp="true"
+                                    valueHelpRequest="onValueHelpRequest"
+                                    valueHelpOnly="true"
+                                    app:entitySet="C_MM_IncotermValueHelp"
+                                    app:filter1="Key|Text"
+                                    app:column1="Key"
+                                    app:column2="Name"
+                                    app:key="Key"
+                                    app:value="Key"
+                                    app:descriptionKey="Name"
+                                    editable="{editableModel>/onlyDisplay}"
+                                    valueState="{= !!${SalesOrder>inco1} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>inco1} ? '' : ${i18n>fieldMandatory}}"
+                                />
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column
+                            width="11rem"
+                            visible="{editableModel>/ContractNo}"
+                        >
+                            <Label text="" />
+                            <ui:template>
+                                <Button
+                                    icon="sap-icon://decline"
+                                    type="Reject"
+                                    press=".onPressDeleteLine"
+                                />
+                            </ui:template>
+                        </ui:Column>
+                    </ui:columns>
+                </ui:Table>
+            </VBox>
+        </semantic:content>
+
+        <semantic:footerCustomActions>
+            <Button
+                text="Save"
+                press="onPressSave"
+                visible="{editableModel>/onlyDisplay}"
+            />
+            <Button
+                text="Cancel"
+                press="onPressCancel"
+            />
+
+            <Button
+                id="messagePopoverBtn"
+                visible="false"
+                icon="sap-icon://information"
+                type="Neutral"
+                text="Information"
+                press=".handleMessagePopoverPress"
+                ariaHasPopup="Dialog"
+            />
+        </semantic:footerCustomActions>
+    </semantic:SemanticPage>
+</mvc:View>

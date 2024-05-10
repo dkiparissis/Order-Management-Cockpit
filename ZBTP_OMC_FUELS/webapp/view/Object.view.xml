@@ -1,0 +1,315 @@
+<mvc:View controllerName="helpe.fastentryso.controller.Object" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:ui="sap.ui.table" xmlns:core="sap.ui.core" xmlns:semantic="sap.f.semantic"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+    <semantic:SemanticPage id="page" showFooter="true" headerPinnable="false" toggleHeaderOnTitleClick="false" 
+        busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}" class="sapUiNoContentPadding">
+
+        <semantic:titleHeading>
+            <HBox renderType="Bare" alignItems="Center">
+                <Avatar src="{textModel>/Icon}" displayShape="Square" class="sapUiTinyMarginEnd"/>
+                <VBox renderType="Bare">
+                    <Title text="{textModel>/Title}"/>
+                    <Label text="{textModel>/Text}" design="Bold"/>
+                </VBox>
+            </HBox>
+        </semantic:titleHeading>
+
+        <semantic:content>
+            <VBox>
+                <core:Fragment fragmentName="helpe.fastentryso.fragment.TruckHeader" type="XML"/>
+
+                <ui:Table rows="{path: 'SalesOrder>/to_OrdersChangeItems/results', sorter: {path: 'SalesOrderItem'}}" 
+                    visibleRowCount="{SalesOrder>/to_OrdersChangeItems/results/length}" ariaLabelledBy="title" 
+                    selectionMode="None" enableColumnFreeze="true" class="sapUiTinyMargin" enableColumnReordering="true">
+                    <ui:extension>
+                        <OverflowToolbar style="Clear">
+                            <Title text="{i18n>Items} ({SalesOrder>/to_OrdersChangeItems/results/length})"/>
+                            <ToolbarSpacer/>
+                            <!-- - evkontos 11.4.2024 -->
+                            <!-- <Button icon="sap-icon://add" text="{i18n>Add}" type="Accept" press=".onPressNewLine" 
+                                visible="{editableModel>/ContractNo}"/> -->
+                        </OverflowToolbar>
+                    </ui:extension>
+                    <ui:columns>
+
+                        <ui:Column width="11rem">
+                            <Label text="{textModel>/Item}"/>
+                            <ui:template>
+                                <!-- <Input id="inputContractItem" value="{SalesOrder>SalesOrderItem}" type="Text" 
+                                    showSuggestion="true" showValueHelp="true" valueHelpRequest="onValueHelpRequest" 
+                                    app:entitySet="ZSD_CDS_B_FAST_ENTRY_ITEMS" app:filter1="Key|Text" app:column1="Key" 
+                                    app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                                    editable="{editableModel>/ContractNo}">
+                                    <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData>
+                                </Input>  suggestionItems="{  path:'S1>/results'}" -->
+                                <HBox renderType="Bare" alignItems="Center">
+                                    <Button icon="sap-icon://delete" type="Reject" press=".onPressDeleteLine" class="sapUiTinyMarginEnd"
+                                        visible="{= !${SalesOrder>TargetQuantity} &amp;&amp; ${SalesOrder>indicator} !== 'D'}"
+                                        tooltip="Delete item"/>
+                                    <core:Icon src="sap-icon://sys-cancel-2" color="Negative"
+                                        tooltip="Item will be deleted"
+                                        visible="{= ${SalesOrder>indicator} === 'D'}" class="sapUiTinyMarginEnd"/>
+                                    <Text text="{= !!${SalesOrder>SalesOrderItem} ? ${SalesOrder>SalesOrderItem} : ${SalesOrder>SalesContractItem}}"/>
+                                </HBox>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MaterialCode}" required="true"/>
+                            <ui:template>
+                                <VBox renderType="Bare">
+                                <Input showSuggestion="true" value="{SalesOrder>matnr}" visible="{contractModel>/hasContract}"
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"
+                                    showTableSuggestionValueHelp="false" suggestionRows="{path: 'S1>/results', templateShareable: false}" 
+                                    suggestionItemSelected="handleSuggestionContractItemSelect" tooltip="Converted Qty: {SalesOrder>TargetQuantityConv}"
+                                    valueState="{= !!${SalesOrder>matnr} ? 'None': 'Error'}" change="onMaterialInputChange"
+                                    valueStateText="{= !!${SalesOrder>matnr} ? '' : ${i18n>fieldMandatory}}">
+                                    <suggestionColumns>
+                                        <Column popinDisplay="Inline" demandPopin="true">
+                                            <Label text="{i18n>Material}"/>
+                                        </Column>
+                                        <Column popinDisplay="Inline" demandPopin="true" minScreenWidth="Tablet">
+                                            <Label text="{i18n>Item}"/>
+                                        </Column>
+                                        <Column hAlign="End" popinDisplay="Inline" minScreenWidth="Tablet">
+                                            <Label text="{i18n>TargetQty}"/>
+                                        </Column>
+                                        <Column hAlign="End" popinDisplay="Inline" minScreenWidth="Tablet">
+                                            <Label text="{i18n>ContractOrderQty}"/>
+                                        </Column>
+                                        <Column hAlign="End" popinDisplay="Inline" minScreenWidth="Tablet">
+                                            <Label text="{i18n>OpenContractQty}"/>
+                                        </Column>
+                                    </suggestionColumns>
+
+                                    <suggestionRows>
+                                        <ColumnListItem>
+                                            <Label text="{S1>matnr}"/>
+                                            <Label text="{S1>SalesContractItem}"/>
+			                                <Text text="{path: 'S1>TargetQuantity', type: 'sap.ui.model.type.Float'}"/>
+			                                <Text text="{path: 'S1>ContractOrderQuantity', type: 'sap.ui.model.type.Float'}"/>
+			                                <Text text="{path: 'S1>OpenContractQuantity', type: 'sap.ui.model.type.Float'}"/>
+                                        </ColumnListItem>
+                                    </suggestionRows>
+                                </Input>
+
+                                <!-- + evkontos 19.4.2024: Without contract only -->
+                                <Input value="{SalesOrder>matnr}" showSuggestion="true" visible="{= !${contractModel>/hasContract}}"
+                                    showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest"
+                                    app:entitySet="ZMM_CDS_B_MATERIAL_VH" valueState="{= !!${SalesOrder>matnr} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>matnr} ? '' : ${i18n>fieldMandatory}}" tooltip="Converted Qty: {SalesOrder>TargetQuantityConv}"
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"/>
+
+                                </VBox>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End">
+                            <Label text="{i18n>MaterialQuantity}" required="true"/>
+                            <ui:template>
+                                <!-- <Input value="{SalesOrder>TargetQuantity}" editable="{editableModel>/onlyDisplay}"/> -->
+                                <!-- valueState="{= !!${SalesOrder>TargetQuantity} ? 'None': 'Error'}"
+                                valueStateText="{= !!${SalesOrder>TargetQuantity} ? '' : ${i18n>fieldMandatory}}" -->
+                                <Input value="{path: 'SalesOrder>TargetQuantity', type: 'sap.ui.model.type.Float'}" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"
+                                    tooltip="({SalesOrder>zzvehicle} / {SalesOrder>zztrailer})" change="onMaterialQtyUoMChange"
+                                    valueState="{parts:['SalesOrder>TargetQuantity', 
+                                                        'SalesOrder>TargetQuantityUnit',
+                                                        'SalesOrder>TargetQuantityConv', 
+                                                        'SalesOrder>zzcompcap', 
+                                                        'SalesOrder>zzcompcapuom'], formatter: '.formatter.materialQtyStateFormatter'}"
+                                    valueStateText="{parts:['SalesOrder>TargetQuantity', 
+                                                        'SalesOrder>TargetQuantityUnit',
+                                                        'SalesOrder>TargetQuantityConv', 
+                                                        'SalesOrder>zzcompcap', 
+                                                        'SalesOrder>zzcompcapuom'], formatter: '.formatter.materialQtyStateTextFormatter'}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="10rem">
+                            <Label text="{i18n>UnitofMeasure}" required="true"/>
+                            <ui:template>
+                                <!-- <Input value="{SalesOrder>TargetQuantityUnit}" editable="{editableModel>/ContractNo}"/> -->
+                                <!-- <Text text="{SalesOrder>ContractTargetQuantityUnit}">
+                                    <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData>
+                                </Text> -->
+                                <!-- + evkontos 16.4.2024 -->
+                                <Select items="{path: 'uomData>/', templateShareable: true}" selectedKey="{SalesOrder>TargetQuantityUnit}" forceSelection="false" 
+                                    valueState="{= !!${SalesOrder>TargetQuantityUnit} ? 'None': 'Error'}" width="100%" change="onMaterialQtyUoMChange"
+                                    valueStateText="{= !!${SalesOrder>TargetQuantityUnit} ? '' : ${i18n>fieldMandatory}}"
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}">
+                                    <core:ListItem key="{uomData>uom}" text="{uomData>Descr}"/>
+                                </Select>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="12rem">
+                            <Label text="{i18n>CompNumber}"/>
+                            <ui:template>
+                                <!-- <Input value="{SalesOrder>zzcomp}" editable="{editableModel>/ContractNo}"/> -->
+                                <!-- + evkontos 11.4.2024 -->
+                                <Input value="{SalesOrder>zzcomp}" 
+                                    editable="{= !${SalesOrder>/zzvehicle} &amp;&amp; ${SalesOrder>indicator} !== 'D' &amp;&amp; ${editableModel>/ContractNo}}"/>
+                                <!-- <Select selectedKey="{SalesOrder>zzcomp}" items="{compartmentData>/}" forceSelection="false" width="100%"
+                                    editable="{= !${SalesOrder>/zzvehicle} &amp;&amp; ${SalesOrder>indicator} !== 'D' &amp;&amp; ${editableModel>/ContractNo}}">
+                                    <core:ListItem key="{compartmentData>Compartmentno}" 
+                                        text="{compartmentData>Compartmentno}: {compartmentData>Volume}{compartmentData>Uom}"/>
+                                </Select> -->
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>CompCapacity}"/>
+                            <ui:template>
+                                <!-- <Input value="{SalesOrder>zzcompcap}" editable="{editableModel>/ContractNo}"/> -->
+                                <!-- + evkontos 11.4.2024 -->
+                                <Input value="{path: 'SalesOrder>zzcompcap', type: 'sap.ui.model.type.Float'}" 
+                                    editable="{= !${SalesOrder>/zzvehicle} &amp;&amp; ${SalesOrder>indicator} === 'D' &amp;&amp; ${editableModel>/ContractNo}}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>UnitofMeasure}"/>
+                            <ui:template>
+                                <!-- <Input value="{SalesOrder>zzcompcapuom}" editable="{editableModel>/ContractNo}"/> -->
+                                <!-- + evkontos 11.4.2024 -->
+                                <Input value="{SalesOrder>zzcompcapuom}" 
+                                    editable="{= !${SalesOrder>/zzvehicle} &amp;&amp; ${SalesOrder>indicator} !== 'D' &amp;&amp; ${editableModel>/ContractNo}}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>HandlingType}" required="true"/>
+                            <ui:template>
+                                <Input id="handlingtype" value="{SalesOrder>oihantyp}" showSuggestion="true" 
+                                    showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest" 
+                                    app:entitySet="ZSD_CDS_B_HANDLINGTYPE_VH" 
+                                    valueState="{= !!${SalesOrder>oihantyp} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>oihantyp} ? '' : ${i18n>fieldMandatory}}"
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>LicenseID}"/>
+                            <ui:template>
+                                <Input id="licenseId" value="{SalesOrder>oih_licin}" showSuggestion="true" 
+                                    showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequest"
+                                    showClearIcon="true" liveChange="onClearButtonPress" 
+                                    app:entitySet="ZSD_CDS_B_LICENSE_VH" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- + evkontos 8.4.2024 -->
+                        <ui:Column width="7rem">
+                            <Label text="{i18n>Brand}"/>
+                            <ui:template>
+                                <Select id="select" selectedKey="{SalesOrder>zzitbrand}" width="auto" 
+                                    forceSelection="false" items="{path: 'oModelbrand>/items', templateShareable: true}" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}">
+                                    <core:ListItem key="{oModelbrand>Brand}" text="{oModelbrand>Description}"/>
+                                </Select>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="5rem">
+                            <Label text="{i18n>MOT}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_mot}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>MOTDescr}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>oic_motDesc}"/>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem">
+                            <Label text="{i18n>Incoterm}" required="true"/>
+                            <ui:template>
+                                <Input id="inputIncoterm" value="{SalesOrder>inco1}" type="Text" showValueHelp="true" 
+                                    valueHelpRequest="onValueHelpRequest" valueHelpOnly="true" 
+                                    app:entitySet="C_MM_IncotermValueHelp" app:filter1="Key|Text" app:column1="Key" 
+                                    app:column2="Name" app:key="Key" app:value="Key" app:descriptionKey="Name" 
+                                    editable="{parts:['SalesOrder>indicator', 'editableModel>/onlyDisplay'], formatter: '.formatter.deletionIndicatorFormatter'}"
+                                    valueState="{= !!${SalesOrder>inco1} ? 'None': 'Error'}"
+                                    valueStateText="{= !!${SalesOrder>inco1} ? '' : ${i18n>fieldMandatory}}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M4 S4"/>
+                                    </layoutData> -->
+                                </Input>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End" visible="{contractModel>/hasContract}">
+                            <Label text="{i18n>ContractItemQty}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>ContractOrderQuantity', type: 'sap.ui.model.type.Float'}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End" visible="{contractModel>/hasContract}">
+                            <Label text="{i18n>ConsumedQty}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>ContractTargetQuantity', type: 'sap.ui.model.type.Float'}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" hAlign="End" visible="{contractModel>/hasContract}">
+                            <Label text="{i18n>OpenQty}"/>
+                            <ui:template>
+                                <Text text="{path: 'SalesOrder>OpenContractQuantity', type: 'sap.ui.model.type.Float'}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <ui:Column width="11rem" visible="{contractModel>/hasContract}">
+                            <Label text="{i18n>UnitofMeasure}"/>
+                            <ui:template>
+                                <Text text="{SalesOrder>ContractTargetQuantityUnit}">
+                                    <!-- <layoutData>
+                                        <l:GridData span="XL2 L5 M5 S4"/>
+                                    </layoutData> -->
+                                </Text>
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- - evkontos 11.4.2024 -->
+                        <!-- <ui:Column hAlign="End" width="4rem" visible="{editableModel>/ContractNo}">
+                            <Label text=""/>
+                            <ui:template>
+                                <Button icon="sap-icon://decline" type="Reject" press=".onPressDeleteLine"/>
+                            </ui:template>
+                        </ui:Column> -->
+
+                    </ui:columns>
+                </ui:Table>
+            </VBox>
+        </semantic:content>
+
+        <semantic:footerCustomActions>
+            <Button text="{i18n>Save}" icon="sap-icon://save" press="onPressSave" visible="{editableModel>/onlyDisplay}"/>
+            <Button text="{i18n>Cancel}" icon="sap-icon://nav-back" press="onPressCancel"/>
+            <Button id="messagePopoverBtn" visible="false" icon="sap-icon://information" text="{i18n>Information}" 
+                press=".handleMessagePopoverPress" ariaHasPopup="Dialog"/>
+        </semantic:footerCustomActions>
+    </semantic:SemanticPage>
+</mvc:View>

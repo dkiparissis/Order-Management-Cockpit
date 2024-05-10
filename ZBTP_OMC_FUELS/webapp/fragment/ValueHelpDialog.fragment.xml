@@ -1,0 +1,12 @@
+<core:FragmentDefinition xmlns="sap.ui.comp.valuehelpdialog" xmlns:core="sap.ui.core" 
+	xmlns:fb="sap.ui.comp.filterbar">
+	<ValueHelpDialog title="{help>/title}" ok=".onOkValueHelp" supportRanges="false"
+		cancel=".onCancelValueHelp" afterClose=".onAfterCloseValueHelp" contentWidth="40vw"
+		key="{help>/key}" descriptionKey="{help>/descriptionKey}" >
+		<filterBar>
+			<fb:FilterBar advancedMode="true" showGoOnFB="true" search=".onSearchValueHelp" 
+				isRunningInValueHelpDialog="true">
+			</fb:FilterBar>
+		</filterBar>
+	</ValueHelpDialog>
+</core:FragmentDefinition>

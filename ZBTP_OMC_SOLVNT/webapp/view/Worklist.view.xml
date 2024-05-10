@@ -1,0 +1,178 @@
+<mvc:View
+    controllerName="helpe.fastentrysol.controller.Worklist"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:sfb="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:sv="sap.ui.comp.smartvariants"
+>
+    <f:DynamicPage
+        id="dynamicPageId"
+        headerExpanded="{/headerExpanded}"
+        toggleHeaderOnTitleClick="{/titleClickable}"
+        class="sapUiNoContentPadding"
+    >
+        <f:header>
+            <f:DynamicPageHeader>
+                <sfb:SmartFilterBar
+                    id="smartFilterBar"
+                    entitySet="ZSD_CDS_B_ORDER_VH"
+                    enableBasicSearch="true"
+                    basicSearchFieldName="CompanyCode"
+                    persistencyKey="UniqueAndStablePersistencyKey"
+                >
+                    <sfb:customData>
+                        <core:CustomData
+                            key="defaultFilterBarExpanded"
+                            value='{"CompanyCode": "true"}'
+                        />
+                        <core:CustomData
+                            key="defaultShowAllFilters"
+                            value='{"CompanyCode": "true"}'
+                        />
+                    </sfb:customData>
+                </sfb:SmartFilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+        <!-- DynamicPage Title -->
+
+        <f:title>
+            <f:DynamicPageTitle class="customBackground">
+                <f:heading>
+                    <!-- <Title text="{i18n>appT}" /> -->
+                    <HBox
+                        renderType="Bare"
+                        alignItems="Center"
+                    >
+                        <Avatar
+                            src="sap-icon://sales-order"
+                            displayShape="Square"
+                            class="sapUiTinyMarginEnd"
+                        />
+                        <VBox renderType="Bare">
+                            <Title text="{i18n>appT}" />
+                            <Label
+                                text="{i18n>worklistTitle}"
+                                design="Bold"
+                            />
+                        </VBox>
+                    </HBox>
+                </f:heading>
+
+                <!-- <f:expandedContent>
+                    <Label text="{i18n>worklistTitle}" />
+                </f:expandedContent>
+                <f:snappedContent>
+                    <Label text="{i18n>Solvents}" />
+                </f:snappedContent>
+                <f:snappedTitleOnMobile>
+                    <Title text="{i18n>Solvents}" />
+                </f:snappedTitleOnMobile> -->
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:content>
+            <smartTable:SmartTable
+                id="smartTable"
+                entitySet="ZSD_CDS_B_ORDER_VH"
+                smartFilterId="smartFilterBar"
+                tableType="Table"
+                showVariantManagement="true"
+                useVariantManagement="true"
+                enableAutoColumnWidth="false"
+                useTablePersonalisation="true"
+                header="Sales Orders"
+                showRowCount="true"
+                requestAtLeastFields="SalesOrder"
+                persistencyKey="UniqueAndStablePersistencyKey"
+                beforeRebindTable="beforeGo"
+                initiallyVisibleFields="SalesOrder,SalesOrganization,DistributionChannel,OrganizationDivision,bstnk,SalesOrderDate,SoldToParty,ShipToParty,ShippingTypeDesc,cmgst">
+                <smartTable:customToolbar>
+                    <OverflowToolbar
+                        id="idPOSchedulePage_overflowtoolbar1"
+                        design="Transparent"
+                    >
+                        <ToolbarSpacer id="idPOSchedulePage_toolbarspacer0" />
+                        <!-- <MenuButton
+                            text="Create"
+                            visible="false"
+                        >
+                            <menu>
+                                <Menu itemSelected="onMenuAction">
+                                    <MenuItem
+                                        text="Truck/Train"
+                                        press="onPressCreateRequest"
+                                    />
+                                    <MenuItem
+                                        text="Vessel/Pipeline"
+                                        press="onPressCreateRequest_V"
+                                    />
+                                </Menu>
+                            </menu>
+                        </MenuButton> -->
+                        <Button
+                            text="Edit"
+                            press="onEdit"
+                        />
+                    </OverflowToolbar>
+                </smartTable:customToolbar>
+
+                <Table
+                    id="idPOSchedulePage_table0"
+                    growing="true"
+                    growingScrollToLoad="true"
+                    selectionChange="onPOListSelectionFromList"
+                    mode="SingleSelectLeft"
+                    sticky="ColumnHeaders,HeaderToolbar,InfoToolbar"
+                >
+                    <columns>
+                        <Column>
+                            <customData>
+                                <core:CustomData
+                                    id="idFlagPage_customdata1"
+                                    key="p13nData"
+                                    value='\{"columnKey": "SalesOrder", "sortProperty": "SalesOrder","filterProperty": "SalesOrder"}'
+                                />
+                            </customData>
+                            <Text text="Sales Order" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Link
+                                    text="{SalesOrder}"
+                                    emphasized="true"
+                                    press="onClickSOLink"
+                                />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </smartTable:SmartTable>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <Button
+                    icon="sap-icon://message-popup"
+                    text="{/messagesLength}"
+                    type="Emphasized"
+                    press="onMessageButtonPress"
+                    visible="{= !!${/messagesLength}}"
+                />
+                <ToolbarSpacer />
+                <Button
+                    type="Accept"
+                    text="{i18n>Accept}"
+                />
+                <Button
+                    type="Reject"
+                    text="{i18n>Reject}"
+                />
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

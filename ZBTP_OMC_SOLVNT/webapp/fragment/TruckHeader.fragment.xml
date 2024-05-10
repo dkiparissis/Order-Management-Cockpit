@@ -1,0 +1,310 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+>
+    <form:SimpleForm
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanXL="4"
+        labelSpanL="6"
+        labelSpanM="12"
+        labelSpanS="12"
+        adjustLabelSpan="false"
+        emptySpanXL="0"
+        emptySpanL="0"
+        emptySpanM="0"
+        emptySpanS="0"
+        columnsXL="3"
+        columnsL="3"
+        columnsM="1"
+        singleContainerFullSize="false"
+        class="customTitleNoHeight"
+    >
+        <form:content>
+            <Label text="{i18n>CustomerCode}" />
+            <Text text="{SalesOrder>/kunnr}" />
+
+            <Label text="{i18n>CustomerName}" />
+            <Text text="{SalesOrder>/name1} {SalesOrder>/land1}" />
+
+            <Label text="{i18n>Shipto}" />
+            <Text text="{SalesOrder>/ShipToParty}" />
+
+            <Label text="{i18n>ShiptoName}" />
+            <Text
+                text="{SalesOrder>/ShipToPartyName} {SalesOrder>/ShipToPartyLand}"
+            />
+
+            <Label text="{i18n>IntercompanyPartner}" />
+            <Text text="{SalesOrder>/IntercompanyPartner}" />
+
+            <Label text="{i18n>IPN}" />
+            <Text text="{SalesOrder>/IntercompanyPartnerName}" />
+
+            <Label text="{i18n>MRNno}" />
+            <Text text="{SalesOrder>/zzmrnssdn}" />
+
+            <Label
+                text="{i18n>SealID}"
+                required="true"
+            />
+            <Input
+                value="{SalesOrder>/zzseal}"
+                editable="{editableModel>/onlyDisplay}"
+                maxLength="20"
+                valueState="{= !!${SalesOrder>/zzseal} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzseal} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <core:Title />
+
+            <Label text="{i18n>CustomerRefNumber}" />
+            <Text text="{SalesOrder>/bstnk}" />
+
+            <Label
+                text="{i18n>DestinationID}"
+                required="true"
+            />
+            <Input
+                id="inputDestinationID"
+                value="{SalesOrder>/zzdestid}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onValueHelpRequest"
+                valueHelpOnly="true"
+                app:entitySet="ZSD_CDS_B_TL_DEST"
+                app:filter1="Key|Text"
+                app:column1="Key"
+                app:column2="Name"
+                app:key="Key"
+                app:value="Key"
+                app:descriptionKey="Name"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/zzdestid} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzdestid} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label
+                text="{i18n>LoadingPoint}"
+                required="true"
+            />
+            <Input
+                id="inputLoadingPoint"
+                value="{SalesOrder>/vstel}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onValueHelpRequest"
+                valueHelpOnly="true"
+                app:entitySet="ZSD_CDS_B_TL_DEST2"
+                app:filter1="Key|Text"
+                app:column1="Key"
+                app:column2="Name"
+                app:key="Key"
+                app:value="Key"
+                app:descriptionKey="Name"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/vstel} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/vstel} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label text="{i18n>SalesOrg}" />
+            <Text text="{SalesOrder>/vkorg} {SalesOrder>/VkorgDesc}" />
+
+            <Label text="{i18n>DistChannel}" />
+            <Text text="{SalesOrder>/vtweg} {SalesOrder>/VtwegDesc}" />
+
+            <Label text="{i18n>Division}" />
+            <Text text="{SalesOrder>/spart} {SalesOrder>/SpartDesc}" />
+
+            <Label text="{i18n>Plant}" />
+            <Text text="{SalesOrder>/werks} {SalesOrder>/WerksDesc}" />
+
+            <Label text="{i18n>SalesOrderType}" />
+            <Text text="{SalesOrder>/auart} {SalesOrder>/AuartDesc}" />
+
+            <Label
+                text="{i18n>HID}"
+                required="true"
+            />
+            <Input
+                id="inputHandleCode"
+                value="{SalesOrder>/zzhandid}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onValueHelpRequest"
+                valueHelpOnly="true"
+                app:entitySet="ZSD_CDS_B_HANDID_VH"
+                app:filter1="Key|Text"
+                app:column1="Key"
+                app:column2="Name"
+                app:key="Key"
+                app:value="Key"
+                app:descriptionKey="Name"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/zzhandid} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzhandid} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label text="{i18n>HIDDesc}" />
+            <Text text="{SalesOrder>/zzhandid_desc}" />
+
+            <core:Title />
+
+            <Label text="{i18n>ShipType}" />
+            <!-- ModeOfTransport -->
+            <Input
+                id="inputModeofTransport"
+                value="{SalesOrder>/ShippingType}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onValueHelpRequest"
+                valueHelpOnly="true"
+                app:entitySet="ZSD_CDS_B_ShippingType_VH"
+                app:filter1="Key|Text"
+                app:column1="Key"
+                app:column2="Name"
+                app:key="Key"
+                app:value="Key"
+                app:descriptionKey="Name"
+                editable="{editableModel>/ContractNo}"
+                valueState="{= !!${SalesOrder>/vdatu} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/vdatu} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label text="{i18n>ShipTypeD}" />
+            <Text text="{SalesOrder>/ShippingTypeDesc}" />
+
+            <Label
+                text="{i18n>CarrierCode}"
+                required="true"
+            />
+            <Input
+                id="inputCarrierCode"
+                value="{SalesOrder>/zzvendor}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onValueHelpRequest"
+                valueHelpOnly="true"
+                app:entitySet="ZSD_CDS_B_CARRIER_VH"
+                showClearIcon="true"
+                liveChange="onClearButtonPress"
+                app:filter1="Key|Text"
+                app:column1="Key"
+                app:column2="Name"
+                app:key="Key"
+                app:value="Key"
+                app:descriptionKey="Name"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/zzvendor} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzvendor} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label text="{i18n>CarrName}" />
+            <Text
+                text="{SalesOrder>/zzvendorName} {SalesOrder>/zzvendorLand}"
+            />
+
+            <Label
+                text="{i18n>DeliveryDate}"
+                required="true"
+            />
+            <DatePicker
+                id="inputdelvDate"
+                dateValue="{SalesOrder>/vdatu}"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/vdatu} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/vdatu} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label
+                text="{i18n>DriverID}"
+                required="true"
+            />
+            <Input
+                id="inputDriverCode"
+                value="{SalesOrder>/zzdrivercode}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onValueHelpRequest"
+                valueHelpOnly="true"
+                app:entitySet="DriverVHSet"
+                app:filter1="Key|Text"
+                app:column1="Key"
+                app:column2="Name"
+                app:key="Key"
+                app:value="Key"
+                app:descriptionKey="Name"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/zzdrivercode} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzdrivercode} ? '' : ${i18n>fieldMandatory}}"
+            />
+
+            <Label text="{i18n>DriverFName}" />
+            <Text text="{SalesOrder>/zzdriverfname}" />
+
+            <Label text="{i18n>DriverLName}" />
+            <Text text="{SalesOrder>/zzdriverlname}" />
+
+            <Label
+                text="{i18n>VehicleID}"
+                required="true"
+            />
+            <Input
+                id="inputVehicleId"
+                value="{SalesOrder>/zzvehicle}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onVehicleValueHelpRequest"
+                valueHelpOnly="true"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/zzvehicle} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zzvehicle} ? '' : ${i18n>fieldMandatory}}"
+            >
+                <customData>
+                    <core:CustomData
+                        key="vehicleType"
+                        value="truck"
+                    />
+                </customData>
+            </Input>
+
+            <Label
+                text="{i18n>TrailerID}"
+                required="true"
+            />
+            <Input
+                id="inputTrailerID"
+                value="{SalesOrder>/zztrailer}"
+                type="Text"
+                showValueHelp="true"
+                valueHelpRequest="onVehicleValueHelpRequest"
+                valueHelpOnly="true"
+                editable="{= !!${SalesOrder>/zzvehicle} &amp;&amp; ${editableModel>/onlyDisplay}}"
+                valueState="{= !!${SalesOrder>/zztrailer} ? 'None': 'Error'}"
+                valueStateText="{= !!${SalesOrder>/zztrailer} ? '' : ${i18n>fieldMandatory}}"
+            >
+                <customData>
+                    <core:CustomData
+                        key="vehicleType"
+                        value="trail"
+                    />
+                </customData>
+            </Input>
+
+            <Label
+                text="{i18n>CID}"
+                required="true"
+            />
+            <Input
+                value="{SalesOrder>/zzcardidso}"
+                editable="{editableModel>/onlyDisplay}"
+                valueState="{= !!${SalesOrder>/zzcardidso} ? 'None': 'Error'}"
+                maxLength="4"
+                valueStateText="{= !!${SalesOrder>/zzcardidso} ? '' : ${i18n>fieldMandatory}}"
+            />
+        </form:content>
+    </form:SimpleForm>
+</core:FragmentDefinition>

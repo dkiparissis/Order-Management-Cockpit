@@ -1,0 +1,193 @@
+{
+    "_version": "1.59.0",
+    "sap.app": {
+        "id": "helpe.fastentryso",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:worklist",
+            "version": "1.12.1",
+            "toolsId": "bf06591b-7f9b-4fe6-ae26-66a289cd1a46"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/ZOI_BTP_SALES_ORDER_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "S1": {
+                "uri": "/sap/opu/odata/sap/ZV_FAST_ENTRY_SO_CDS/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        },
+        "fullWidth": true
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "dependencies": {
+            "minUI5Version": "1.108.22",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "helpe.fastentryso.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            },
+            "S2": {
+                "dataSource": "S2",
+                "preload": true,
+                "settings": {}
+            },
+            "editableModel": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "searchHelpTextModel": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "S1": {
+                "type": "sap.ui.model.json.JSONModel"
+            },
+            "SOModel": {
+                "type": "sap.ui.model.json.JSONModel"
+            }
+        },
+        "resources": {
+            "css": [
+                {
+					"uri": "css/style.css"
+				}
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "helpe.fastentryso.view",
+                "controlId": "app",
+                "controlAggregation": "pages",
+                "bypassed": {
+                    "target": [
+                        "notFound"
+                    ]
+                },
+                "async": true
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "worklist",
+                    "target": [
+                        "worklist"
+                    ]
+                },
+                {
+                    "pattern": "SalesOrderListSetV/{objectId}/:mode:",
+                    "name": "object_V",
+                    "target": [
+                        "object_V"
+                    ]
+                },
+                {
+                    "pattern": "SalesOrderListSetT/{objectId}/:mode:",
+                    "name": "object_T",
+                    "target": [
+                        "object_T"
+                    ]
+                },
+                {
+                    "pattern": "SalesOrderListSet/{objectId}/:mode:",
+                    "name": "object",
+                    "target": [
+                        "object"
+                    ]
+                }
+            ],
+            "targets": {
+                "worklist": {
+                    "viewName": "Worklist",
+                    "viewId": "worklist",
+                    "viewLevel": 1,
+                    "title": "{i18n>worklistViewTitle}"
+                },
+                "object": {
+                    "viewName": "Object",
+                    "viewId": "object",
+                    "viewLevel": 2,
+                    "title": "{i18n>objectViewTitle}"
+                },
+                "object_T": {
+                    "viewName": "Object_T",
+                    "viewLevel": 2
+                },
+                "object_V": {
+                    "viewName": "Object_V",
+                    "viewLevel": 2
+                },
+                "objectNotFound": {
+                    "viewName": "ObjectNotFound",
+                    "viewId": "objectNotFound"
+                },
+                "notFound": {
+                    "viewName": "NotFound",
+                    "viewId": "notFound"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "helpe.fastentryso.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        }
+    }
+}

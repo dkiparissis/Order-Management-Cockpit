@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "3.1"
+metadata:
+  name: helpe.fastentryso
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: vision_system_CLONING
+          url: http://visiondev:8430
+        credentials:
+          username: env:UI_USER
+          password: env:UI_PASSWORD
+        app:
+          name: ZBTP_OMC_FUELS
+          description: Order Management Cockpit - Fuels
+          package: ZSD
+          transport: VSDK905705
+        exclude:
+          - /test/

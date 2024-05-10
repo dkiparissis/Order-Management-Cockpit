@@ -1,0 +1,117 @@
+<mvc:View controllerName="sto.controller.Worklist" xmlns="sap.m" xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc" xmlns:sfb="sap.ui.comp.smartfilterbar" xmlns:smartTable="sap.ui.comp.smarttable" 
+    xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:sv="sap.ui.comp.smartvariants">
+    <f:DynamicPage id="dynamicPageId" headerExpanded="{/headerExpanded}" toggleHeaderOnTitleClick="{/titleClickable}"
+        class="sapUiNoContentPadding">
+        
+        <f:header>
+            <f:DynamicPageHeader>
+                <sfb:SmartFilterBar id="smartFilterBar" entitySet="ZMM_CDS_I_FAST_ENTRY" enableBasicSearch="true" 
+                    basicSearchFieldName="ebeln" persistencyKey="UniqueAndStablePersistencyKey">
+                    <sfb:customData>
+                        <core:CustomData key="defaultFilterBarExpanded" value='{"ebeln": "true"}'/>
+                        <core:CustomData key="defaultShowAllFilters" value='{"ebeln": "true"}'/>
+                    </sfb:customData>
+                </sfb:SmartFilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle class="customBackground">
+                <!-- <f:heading>
+                    <Title text="STO Management Cockpit"/>
+                </f:heading> -->
+
+                <f:heading>
+                    <!-- <Title text="Order Management Cockpit"/> -->
+                    <HBox renderType="Bare" alignItems="Center">
+                        <Avatar src="sap-icon://sales-order" displayShape="Square" class="sapUiTinyMarginEnd"/>
+                        <VBox renderType="Bare">
+                            <Title text="STO Management Cockpit"/>
+                            <Label text="STO Management" design="Bold"/>
+                        </VBox>
+                    </HBox>
+                </f:heading>
+
+                <!-- <f:expandedContent>
+                    <Label text="STO Management"/>
+                </f:expandedContent>
+
+                <f:snappedContent>
+                    <Label text="STO"/>
+                </f:snappedContent>
+                
+                <f:snappedTitleOnMobile>
+                    <Title text="STO"/>
+                </f:snappedTitleOnMobile> -->
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:content>
+            <!-- beforeRebindTable="beforeGo" -->
+            <smartTable:SmartTable id="smartTable" entitySet="ZMM_CDS_I_FAST_ENTRY" smartFilterId="smartFilterBar" 
+                tableType="Table" showVariantManagement="true" useVariantManagement="true" enableAutoColumnWidth="true" 
+                useTablePersonalisation="true" header="STO" showRowCount="true" requestAtLeastFields="ebeln" 
+                initiallyVisibleFields="ebeln,ebelp,bukrs,reswk,matnr,werks,motid">
+                <smartTable:customToolbar>
+                    <OverflowToolbar id="idPOSchedulePage_overflowtoolbar1" design="Transparent">
+                        <ToolbarSpacer id="idPOSchedulePage_toolbarspacer0"/>
+                        <MenuButton text="Create">
+                            <menu>
+                                <Menu itemSelected="onMenuAction">
+                                    <!-- <MenuItem text="Truck/Train" icon="sap-icon://shipping-status" press="onPressCreateRequest"/> -->
+                                    <MenuItem text="Truck/Train" icon="sap-icon://shipping-status" press="onPressCreateRequest">
+                                        <customData>
+                                            <core:CustomData key="motid" value="01"/>
+                                        </customData>
+                                    </MenuItem>
+                                    <!-- <MenuItem text="Vessel/Pipeline" icon="sap-icon://BusinessSuiteInAppSymbols/icon-vessel" press="onPressCreateRequest_V"/> -->
+                                    <MenuItem text="Vessel/Pipeline" icon="sap-icon://BusinessSuiteInAppSymbols/icon-vessel" press="onPressCreateRequest">
+                                        <customData>
+                                            <core:CustomData key="motid" value="03"/>
+                                        </customData>
+                                    </MenuItem>
+                                </Menu>
+                            </menu>
+                        </MenuButton>
+                        <Button text="Edit" press="onEdit">
+                        </Button>
+                    </OverflowToolbar>
+                </smartTable:customToolbar>
+
+                <Table id="idPOSchedulePage_table0" growing="true" growingScrollToLoad="true" 
+                    selectionChange="onPOListSelectionFromList" mode="SingleSelectLeft" 
+                    sticky="ColumnHeaders,HeaderToolbar,InfoToolbar">
+                    <columns>
+                        <Column>
+                            <customData>
+                                <core:CustomData id="idFlagPage_customdata1" key="p13nData"
+                                    value='\{"columnKey": "ebeln", "sortProperty": "ebeln","filterProperty": "ebeln"}'/>
+                            </customData>
+                            <Text text="Sales Order"/>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Link text="{ebeln}" emphasized="true" press="onClickSOLink"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </smartTable:SmartTable>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <Button icon="sap-icon://message-popup" text="{/messagesLength}" type="Emphasized" 
+                    press="onMessageButtonPress" visible="{= !!${/messagesLength}}"/>
+                <ToolbarSpacer/>
+                <Button type="Accept" text="Accept"/>
+                <Button type="Reject" text="Reject"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>
